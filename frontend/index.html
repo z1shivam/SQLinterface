@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>SQL interface</title>
+  </head>
+  <body>
+    <header
+      class="w-full h-14 bg-blue-950 flex justify-between items-center px-3 fixed top-0 z-50"
+    >
+      <div class="font-bold text-xl text-white">SQL-Interface</div>
+    </header>
+    <main class="flex h-screen pt-14 w-full">
+      <section class="row-span-2 col-span-3 border-r-2 p-4 w-[60%]">
+        <div class="relative">
+          <textarea
+            name="query"
+            id="mainQuery"
+            cols="30"
+            rows="10"
+            class="bg-gray-100 w-full p-3 rounded-md border-2 font-mono text-black"
+            placeholder="Write your SQL query here..."
+          ></textarea>
+          <button
+            class="absolute top-3 right-3 rounded-md px-5 py-1.5 bg-blue-500 text-white"
+            id="runButton"
+          >
+            Run
+          </button>
+        </div>
+      </section>
+      <div class="w-[40%]">
+
+        <section class="col-span-2 border-b-2 py-3 h-fit">
+          <div class="flex justify-between items-center bg-gray-100 py-2 px-3">
+          <h2 class="text-lg font-medium">Database Server Status:</h2>
+          <span class="text-white bg-red-700 py-2 px-3 w-fit rounded-md"
+          >DISCONNECTED</span
+          >
+        </div>
+        <div class="py-2 px-3">
+          <p>
+            <span class="text-lg text-blue-900 pr-2">HOST:</span
+              ><span id="hostname">Unavailable</span>
+            </p>
+            <p>
+            <span class="text-lg text-blue-900 pr-2">PORT:</span
+            ><span id="hostname">Unavailable</span>
+          </p>
+          <p>
+            <span class="text-lg text-blue-900 pr-2">DATABASE:</span
+            ><span id="hostname">Unavailable</span>
+          </p>
+          <p>
+            <span class="text-lg text-blue-900 pr-2">USER:</span
+            ><span id="hostname">Unavailable</span>
+          </p>
+        </div>
+        <div class="px-3 py-2">
+          <button
+            class="py-2 px-3 bg-blue-500 text-white border-2 border-blue-500 font-bold rounded-md hover:bg-white hover:text-blue-500"
+          >
+            Connect To a Server
+          </button>
+        </div>
+      </section>
+      <section class="col-span-2 p-3">
+        <h2 class="text-lg font-medium">Recent Queries:</h2>
+      </section>
+    </div>
+    </main>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
