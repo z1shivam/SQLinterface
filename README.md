@@ -6,7 +6,7 @@ Welcome to SQL Interface! This project provides a user-friendly web interface to
 
 To get started with SQL Interface, follow these simple steps:
 
-1. **Download the ZIP File**: First, download the ZIP file called `sqlint` from the repository.
+1. **Download the ZIP File**: First, download and UNZIP file called `sqlint` from the releases(source).
 
 2. **Open Terminal**: Navigate to the downloaded `sqlint` folder using your terminal or command prompt.
 
