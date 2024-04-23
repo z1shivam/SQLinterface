@@ -1,7 +1,7 @@
 const { Client } = require("pg");
 const express = require("express");
 const cors = require("cors");
-const PORT = 8080;
+const PORT = 9032;
 const app = express();
 const path = require("path");
 
