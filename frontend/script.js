@@ -1,4 +1,4 @@
-const backendURL = "http://localhost:8080";
+const backendURL = "http://localhost:9032";
 const connectURL = `${backendURL}/connect`;
 const queryURL = `${backendURL}/query`;
 const disconnectURL = `${backendURL}/disconnect`;
