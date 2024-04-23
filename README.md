@@ -2,24 +2,34 @@
 
 Welcome to SQL Interface! This project provides a user-friendly web interface to interact with your PostgreSQL database. Whether your database is hosted anywhere in the world or on your localhost, SQL Interface makes managing your data a breeze.
 
+![Screenshot 2024-04-23 153640](https://github.com/z1shivam/SQLinterface/assets/118415844/a79e5c47-de04-45ac-881e-e05192281c36)
+
 ### 🚀 Getting Started
 
 To get started with SQL Interface, follow these simple steps:
 
 1. **Download the ZIP File**: First, download and UNZIP file called `sqlint` from the releases(source).
 
-2. **Open Terminal**: Navigate to the downloaded `sqlint` folder using your terminal or command prompt.
+![Screenshot 2024-04-23 150455](https://github.com/z1shivam/SQLinterface/assets/118415844/9b7999f8-20bb-4e85-a320-7790c45ddfd6)
 
-3. **Install Dependencies**: Run the following command to install the necessary dependencies:
+3. **Open Terminal**: Navigate to the downloaded `sqlint` folder using your terminal or command prompt.
+
+![Screenshot 2024-04-23 150548](https://github.com/z1shivam/SQLinterface/assets/118415844/9c6167e1-98de-4f3e-85b9-44264de657e7)
+
+5. **Install Dependencies**: Run the following command to install the necessary dependencies:
    ```
    npm i
    ```
    📦 This step is only required for the first time setup.
 
-4. **Start the Application**: After installing the dependencies, run the following command to start the application:
+![Screenshot 2024-04-23 150610](https://github.com/z1shivam/SQLinterface/assets/118415844/c563ffe0-f075-4d77-8b1a-5b0448d12904)
+
+6. **Start the Application**: After installing the dependencies, run the following command to start the application:
    ```
    npm start
    ```
+
+![Screenshot 2024-04-23 150632](https://github.com/z1shivam/SQLinterface/assets/118415844/37440a7b-ad15-4289-9f9e-d02529f4ffe2)
 
 ### 💻 Prerequisites
 
