@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const PORT = 8080;
 const app = express();
+const path = require("path");
 
 // Database configuration
 let dbConf = {
@@ -45,15 +46,16 @@ async function disconnectDb() {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use(express.static(path.join(__dirname, "dist")));
 
 // Default route
 app.get("/", (req, res) => {
   console.log(`Request received from ${req.ip}`);
-  res.json({ message: "Hello from server!" });
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
 // Route to connect to the database
-app.get("/connect", async (req, res) => {
+app.post("/connect", async (req, res) => {
   console.log("Database connection request received!");
   const { user, host, database, dbport, password } = req.body;
 
@@ -74,10 +76,18 @@ app.get("/connect", async (req, res) => {
 
     await connectDb();
 
-    res.json({ message: "Database connected successfully!" });
+    res.json({
+      message: "Database connected successfully",
+      user: dbConf.user,
+      host: dbConf.host,
+      dbport: dbConf.dbport,
+      database: dbConf.database,
+    });
   } catch (error) {
-    console.error("Error connecting to database");
-    res.status(500).json({ error: "Failed to connect to database" });
+    console.error(`Error connecting to database:${error}`);
+    res
+      .status(200)
+      .json([{ command: "error", message: "Failed to connect to database" }]);
   }
 });
 
@@ -86,7 +96,9 @@ app.get("/disconnect", (req, res) => {
   console.log("Database disconnection request received!");
 
   if (!isConnected) {
-    res.json({ message: "Database is not connected" });
+    res
+      .status(200)
+      .json([{ command: "error", message: "Database is not connected" }]);
     return;
   }
 
@@ -95,16 +107,25 @@ app.get("/disconnect", (req, res) => {
 });
 
 // Route to execute a database query
-app.get("/query", async (req, res) => {
+app.post("/query", async (req, res) => {
   if (!isConnected) {
-    res.json({ message: "Database is not connected" });
+    res
+      .status(200)
+      .json([
+        {
+          command: "error",
+          message: "Database is not connected. Please reconnect",
+        },
+      ]);
     return;
   }
 
   const { query } = req.body;
 
   if (!query) {
-    res.json({ message: "Query is not available!" });
+    res
+      .status(200)
+      .json([{ command: "error", message: "Query is not available." }]);
     return;
   }
 
@@ -117,12 +138,12 @@ app.get("/query", async (req, res) => {
     }
     res.json(result);
   } catch (error) {
-    console.error("Error executing query:", error);
-    res.status(500).json({ error: "Failed to execute query" });
+    res.status(200).json([{ command: "error", message: String(error) }]);
   }
 });
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server is up and running on PORT: ${PORT}`);
+  console.log(`CTRL + CLICK on this link to open in browser.`);
+  console.log(`http://localhost:${PORT}`);
 });

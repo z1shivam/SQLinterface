@@ -6,14 +6,16 @@
     <link rel="stylesheet" href="style.css" />
     <title>SQL interface</title>
   </head>
-  <body>
+  <body class="max-h-screen   max-w-full">
     <header
       class="w-full h-14 bg-blue-950 flex justify-between items-center px-3 fixed top-0 z-50"
     >
       <div class="font-bold text-xl text-white">SQL-Interface</div>
     </header>
     <main class="flex h-screen pt-14 w-full">
-      <section class="row-span-2 col-span-3 border-r-2 p-4 w-[60%]">
+      <section
+        class="row-span-2 col-span-3 border-r-2 p-4 w-[60%] overflow-y-scroll "
+      >
         <div class="relative">
           <textarea
             name="query"
@@ -23,54 +25,287 @@
             class="bg-gray-100 w-full p-3 rounded-md border-2 font-mono text-black"
             placeholder="Write your SQL query here..."
           ></textarea>
+
           <button
-            class="absolute top-3 right-3 rounded-md px-5 py-1.5 bg-blue-500 text-white"
-            id="runButton"
+            class="absolute top-3 right-3 rounded-md px-5 py-1.5 bg-blue-500 text-white hover:text-blue-500 hover:bg-white border-2 border-blue-500"
+            id="runQueryBtn"
           >
             Run
           </button>
         </div>
+        <div id="queryRunError" class="text-red-600 font-medium"></div>
+        <div id="resultTable" class="overflow-x-scroll no-scrollbar   hidden"></div>
       </section>
-      <div class="w-[40%]">
-
-        <section class="col-span-2 border-b-2 py-3 h-fit">
+      <div class="w-[40%] overflow-y-scroll">
+        <section class="border-b-2 py-3 h-fit">
           <div class="flex justify-between items-center bg-gray-100 py-2 px-3">
-          <h2 class="text-lg font-medium">Database Server Status:</h2>
-          <span class="text-white bg-red-700 py-2 px-3 w-fit rounded-md"
-          >DISCONNECTED</span
-          >
-        </div>
-        <div class="py-2 px-3">
-          <p>
-            <span class="text-lg text-blue-900 pr-2">HOST:</span
-              ><span id="hostname">Unavailable</span>
+            <h2 class="text-lg font-medium">Database Server Status:</h2>
+            <span
+              class="text-white bg-red-600 py-2 px-5 w-fit rounded-full"
+              id="connectionStatus"
+              >DISCONNECTED</span
+            >
+          </div>
+          <div class="py-2 px-3">
+            <p>
+              <span class="text-lg text-blue-900 pr-2">HOST:</span
+              ><span class="text-indigo-900 font-medium" id="host"
+                >Unavailable</span
+              >
             </p>
             <p>
-            <span class="text-lg text-blue-900 pr-2">PORT:</span
-            ><span id="hostname">Unavailable</span>
-          </p>
-          <p>
-            <span class="text-lg text-blue-900 pr-2">DATABASE:</span
-            ><span id="hostname">Unavailable</span>
-          </p>
-          <p>
-            <span class="text-lg text-blue-900 pr-2">USER:</span
-            ><span id="hostname">Unavailable</span>
-          </p>
-        </div>
-        <div class="px-3 py-2">
-          <button
-            class="py-2 px-3 bg-blue-500 text-white border-2 border-blue-500 font-bold rounded-md hover:bg-white hover:text-blue-500"
+              <span class="text-lg text-blue-900 pr-2">PORT:</span
+              ><span class="text-indigo-900 font-medium" id="dbport"
+                >Unavailable</span
+              >
+            </p>
+            <p>
+              <span class="text-lg text-blue-900 pr-2">DATABASE:</span
+              ><span class="text-indigo-900 font-medium" id="database"
+                >Unavailable</span
+              >
+            </p>
+            <p>
+              <span class="text-lg text-blue-900 pr-2">USER:</span
+              ><span class="text-indigo-900 font-medium" id="user"
+                >Unavailable</span
+              >
+            </p>
+          </div>
+          <div class="px-3 py-2 hidden" id="status0">
+            <button
+              class="py-2 px-3 bg-blue-500 text-white border-2 border-blue-500 font-bold rounded-md hover:bg-white hover:text-blue-500"
+              id="connectPanelBtn"
+            >
+              Connect To a Server
+            </button>
+          </div>
+          <div class="px-3 py-2 hidden" id="status1">
+            <button
+              class="py-2 px-3 bg-green-500 text-white border-2 border-green-500 font-bold rounded-md hover:bg-white hover:text-green-500"
+              id="reconnectServerPanel"
+            >
+              Reconnect to Server
+            </button>
+            <button
+              class="py-2 px-3 ml-2 bg-red-500 text-white border-2 border-red-500 font-bold rounded-md hover:bg-white hover:text-red-500"
+              id="resetServer1"
+            >
+              Reset Server
+            </button>
+          </div>
+          <div class="px-3 py-2 hidden" id="status2">
+            <button
+              id="disconnectServerBtn"
+              class="py-2 px-3 bg-red-500 text-white border-2 border-red-500 font-bold rounded-md hover:bg-white hover:text-red-500"
+            >
+              Disconnect DB
+            </button>
+            <button
+              id="changeDatabaseBtn"
+              class="py-2 px-3 ml-2 bg-blue-500 text-white border-2 border-blue-500 font-bold rounded-md hover:bg-white hover:text-blue-500"
+            >
+              Change DB
+            </button>
+            <button
+              class="py-2 px-3 bg-blue-500 text-white border-2 border-blue-500 font-bold rounded-md hover:bg-white hover:text-blue-500"
+              id="resetServer2"
+            >
+              Reset Server
+            </button>
+          </div>
+        </section>
+        <section class="col-span-2 p-3">
+          <div class="flex justify-between items-center py-1">
+            <h2 class="text-lg font-medium">Recent Queries:</h2>
+            <span
+              id="copyNotif"
+              class="bg-green-600 text-white font-semibold px-3 py-0.5 rounded-full hidden"
+              >Copied</span
+            >
+            <button
+              class="py-1 px-3 bg-red-500 rounded-md text-white flex justify-center items-center hover:bg-white hover:text-red-500 border-2 border-red-500"
+              id="clearCopyHistory"
+            >
+              Clear History
+            </button>
+          </div>
+          <ul
+            class="py-2 flex-col flex gap-2 font-mono text-blue-900 command-list"
           >
-            Connect To a Server
-          </button>
+            <li
+              class="bg-blue-100 py-2 px-3 border-2 border-blue-200 rounded-md relative pr-12"
+            >
+              <button
+                class="absolute right-0 flex justify-center items-start h-full top-0 p-3 bg-blue-200 rounded-r-sm"
+              >
+                <img src="copy-regular.svg" height="15" width="15" alt="" />
+              </button>
+              select * from dvdrental limit 6;
+            </li>
+          </ul>
+        </section>
+      </div>
+    </main>
+    <section
+      class="h-full w-full fixed hidden justify-center items-center z-20 backdrop-blur-md text-white top-0"
+      id="connectPanel"
+    >
+      <section
+        class="w-full h-full bg-black bg-opacity-30 text-white fixed flex justify-center items-center"
+      >
+        <div class="rounded-md bg-white text-black px-6 min-w-[600px] pt-6">
+          <h2 class="text-lg font-bold text-gray-700">
+            Connect a New Database:
+          </h2>
+          <form class="py-3">
+            <div class="grid grid-cols-[90px_auto] gap-4 py-3">
+              <label for="host" class="text-sm">Host:</label>
+              <input
+                type="text"
+                name="host"
+                id="connectFocus"
+                placeholder="localhost"
+                class="py-1 px-3 border-2 rounded-md"
+              />
+
+              <label for="dbport" class="text-sm">Port:</label>
+              <input
+                type="text"
+                name="dbport"
+                placeholder="5432"
+                class="py-1 px-3 border-2 rounded-md"
+              />
+
+              <label for="user" class="text-sm">Username:</label>
+              <input
+                type="text"
+                name="user"
+                placeholder="postgres"
+                class="py-1 px-3 border-2 rounded-md"
+              />
+
+              <label for="password" class="text-sm">Password:</label>
+              <input
+                type="password"
+                name="password"
+                placeholder="********"
+                class="py-1 px-3 border-2 rounded-md"
+              />
+
+              <label for="database" class="text-sm">Database:</label>
+              <input
+                type="text"
+                name="database"
+                placeholder="postgres"
+                class="py-1 px-3 border-2 rounded-md"
+              />
+            </div>
+            <div class="flex justify-between items-center">
+              <button
+                class="bg-emerald-500 text-white px-3 py-2 rounded-md border-2 border-emerald-500 hover:bg-white hover:text-emerald-500"
+                id="connectToDatabase"
+              >
+                Connect to Database
+              </button>
+              <button
+                class="bg-red-500 text-white px-3 py-2 rounded-md border-2 border-red-500 hover:bg-white hover:text-red-500"
+                id="connectPanelClose"
+              >
+                Close
+              </button>
+            </div>
+            <p class="text-red-600 text-md py-2" id="connectionPanelError"></p>
+          </form>
         </div>
       </section>
-      <section class="col-span-2 p-3">
-        <h2 class="text-lg font-medium">Recent Queries:</h2>
+    </section>
+    <section
+      class="h-full w-full fixed justify-center items-center z-20 backdrop-blur-md text-white top-0 hidden"
+      id="reconnectPanel"
+    >
+      <section
+        class="w-full h-full bg-black bg-opacity-30 text-white fixed flex justify-center items-center"
+      >
+        <div class="rounded-md bg-white text-black px-6 min-w-[600px] py-6">
+          <p>Enter your password to continue:</p>
+          <form class="py-3">
+            <div class="grid grid-cols-[190px_auto] gap-4 py-3">
+              <label for="password" class="text-sm">Database Password:</label>
+              <input
+                type="password"
+                name="reconnectPassword"
+                id="reconnectFocus"
+                placeholder="********"
+                class="py-1 px-3 border-2 rounded-md"
+              />
+            </div>
+            <div class="flex justify-between items-center">
+              <button
+                class="bg-emerald-500 text-white px-3 py-2 rounded-md border-2 border-emerald-500 hover:bg-white hover:text-emerald-500"
+                id="reconnectToServer"
+              >
+                Connect to Database
+              </button>
+              <button
+                class="bg-red-500 text-white px-3 py-2 rounded-md border-2 border-red-500 hover:bg-white hover:text-red-500"
+                id="reconnectPanelClose"
+              >
+                Close
+              </button>
+            </div>
+          </form>
+        </div>
       </section>
-    </div>
-    </main>
-    <script type="module" src="/main.js"></script>
+    </section>
+    <section
+      class="h-full w-full fixed justify-center items-center z-20 backdrop-blur-md text-white top-0 hidden"
+      id="changeDbPanel"
+    >
+      <section
+        class="w-full h-full bg-black bg-opacity-30 text-white fixed flex justify-center items-center"
+      >
+        <div class="rounded-md bg-white text-black px-6 min-w-[600px] py-6">
+          <p>Enter the name of the database:</p>
+          <form class="py-3">
+            <div class="grid grid-cols-[190px_auto] gap-4 py-3">
+              <label for="dbName" class="text-sm">Database Name:</label>
+              <input
+                type="text"
+                name="dbName"
+                id="databaseFocus"
+                placeholder="database name"
+                class="py-1 px-3 border-2 rounded-md"
+              />
+              <label for="changeDbPassword" class="text-sm"
+                >Database Password:</label
+              >
+              <input
+                type="password"
+                name="changeDbPassword"
+                placeholder="********"
+                class="py-1 px-3 border-2 rounded-md"
+              />
+            </div>
+            <div class="flex justify-between items-center">
+              <button
+                class="bg-emerald-500 text-white px-3 py-2 rounded-md border-2 border-emerald-500 hover:bg-white hover:text-emerald-500"
+                id="changeDbBtn"
+              >
+                Change Database
+              </button>
+              <button
+                class="bg-red-500 text-white px-3 py-2 rounded-md border-2 border-red-500 hover:bg-white hover:text-red-500"
+                id="changeDbPanleClose"
+              >
+                Close
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </section>
+    <div class="h-0 w-0 fixed top-0 bg-green-600"></div>
+    <script type="module" src="/script.js"></script>
   </body>
 </html>
